@@ -72,4 +72,25 @@ SELECT avg(TIMESTAMPDIFF(YEAR, users.birthday_at , CURDATE())) from users
 -- Следует учесть, что необходимы дни недели текущего года, 
 -- а не года рождения.
 
+-- SELECT TIMESTAMP((DAY, MONTH), birthday_at) FROM users
+-- 
+-- SELECT   count(birthday_at), dayname(birthday_at) AS day
+-- FROM     users
+-- GROUP BY day
+-- 
+-- SELECT YEAR(curdate())
+-- 
+-- SELECT DATE(CONCAT_WS('-', YEAR(curdate()) , MONTH(birthday_at), DAY(birthday_at))) FROM users AS new_dates;
 
+
+SELECT count(DATE(CONCAT_WS('-', YEAR(curdate()) , MONTH(birthday_at), DAY(birthday_at)))), 
+	   dayname(DATE(CONCAT_WS('-', YEAR(curdate()) , MONTH(birthday_at), DAY(birthday_at)))) 
+AS my_day
+FROM users 
+GROUP BY my_day
+
+
+-- Task 3
+-- (по желанию) Подсчитайте произведение чисел в столбце таблицы
+
+select exp(SUM(log(price))) from products
