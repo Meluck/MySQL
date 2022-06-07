@@ -1,97 +1,97 @@
-USE shop;
+USE SHOP;
 
--- Task 1
--- Пусть в таблице users поля created_at и updated_at оказались незаполненными. 
--- Заполните их текущими датой и временем.
-UPDATE users SET created_at = current_timestamp(), 
-         updated_at = current_timestamp();
+-- TASK 1
+-- ПУСТЬ В ТАБЛИЦЕ USERS ПОЛЯ CREATED_AT И UPDATED_AT ОКАЗАЛИСЬ НЕЗАПОЛНЕННЫМИ. 
+-- ЗАПОЛНИТЕ ИХ ТЕКУЩИМИ ДАТОЙ И ВРЕМЕНЕМ.
+UPDATE USERS SET CREATED_AT = CURRENT_TIMESTAMP(), 
+         UPDATED_AT = CURRENT_TIMESTAMP();
 
--- Task 2
--- Таблица users была неудачно спроектирована. 
--- Записи created_at и updated_at были заданы типом VARCHAR
--- и в них долгое время помещались значения в формате "20.10.2017 8:10".
--- Необходимо преобразовать поля к типу DATETIME, сохранив введеные ранее значения.
+-- TASK 2
+-- ТАБЛИЦА USERS БЫЛА НЕУДАЧНО СПРОЕКТИРОВАНА. 
+-- ЗАПИСИ CREATED_AT И UPDATED_AT БЫЛИ ЗАДАНЫ ТИПОМ VARCHAR
+-- И В НИХ ДОЛГОЕ ВРЕМЯ ПОМЕЩАЛИСЬ ЗНАЧЕНИЯ В ФОРМАТЕ "20.10.2017 8:10".
+-- НЕОБХОДИМО ПРЕОБРАЗОВАТЬ ПОЛЯ К ТИПУ DATETIME, СОХРАНИВ ВВЕДЕНЫЕ РАНЕЕ ЗНАЧЕНИЯ.
 
-alter table users modify created_at VARCHAR(255);
-alter table users modify updated_at VARCHAR(255);
+ALTER TABLE USERS MODIFY CREATED_AT VARCHAR(255);
+ALTER TABLE USERS MODIFY UPDATED_AT VARCHAR(255);
 
-alter table users modify created_at DATETIME;
-alter table users modify updated_at DATETIME;
+ALTER TABLE USERS MODIFY CREATED_AT DATETIME;
+ALTER TABLE USERS MODIFY UPDATED_AT DATETIME;
 
--- Task 3
--- В таблице складских запасов storehouses_products в поле value
--- могут встречаться самые разные цифры: 0, если товар закончился 
--- и выше нуля, если на складе имеются запасы. 
--- Необходимо отсортировать записи таким образом, 
--- чтобы они выводились в порядке увеличения значения value. 
--- Однако, нулевые запасы должны выводиться в конце, 
--- после всех записей.
+-- TASK 3
+-- В ТАБЛИЦЕ СКЛАДСКИХ ЗАПАСОВ STOREHOUSES_PRODUCTS В ПОЛЕ VALUE
+-- МОГУТ ВСТРЕЧАТЬСЯ САМЫЕ РАЗНЫЕ ЦИФРЫ: 0, ЕСЛИ ТОВАР ЗАКОНЧИЛСЯ 
+-- И ВЫШЕ НУЛЯ, ЕСЛИ НА СКЛАДЕ ИМЕЮТСЯ ЗАПАСЫ. 
+-- НЕОБХОДИМО ОТСОРТИРОВАТЬ ЗАПИСИ ТАКИМ ОБРАЗОМ, 
+-- ЧТОБЫ ОНИ ВЫВОДИЛИСЬ В ПОРЯДКЕ УВЕЛИЧЕНИЯ ЗНАЧЕНИЯ VALUE. 
+-- ОДНАКО, НУЛЕВЫЕ ЗАПАСЫ ДОЛЖНЫ ВЫВОДИТЬСЯ В КОНЦЕ, 
+-- ПОСЛЕ ВСЕХ ЗАПИСЕЙ.
 
-insert into storehouses_products 
-values (1, 2, 1, 12, '2014-03-16 15:28:28','2022-03-16 15:28:28'),
+INSERT INTO STOREHOUSES_PRODUCTS 
+VALUES (1, 2, 1, 12, '2014-03-16 15:28:28','2022-03-16 15:28:28'),
 	   (2, 3, 3, 32, '2016-05-16 13:10:08','2021-04-10 01:34:28'),
 	   (3, 4, 4, 43, '2013-12-30 15:28:28','2020-03-16 15:28:28'),
 	   (4, 2, 1, 0,  '2020-02-16 15:00:28','2020-03-16 15:28:28'),
 	   (5, 2, 1, 0,  '2019-03-15 10:28:28','2021-03-16 15:28:28');
 
-select value from shop.storehouses_products
-order by if(value=0, 1, 0);
+SELECT  VALUE FROM SHOP.STOREHOUSES_PRODUCTS
+ORDER BY IF(VALUE=0, 1, 0);
 
--- Task 4
--- (по желанию) Из таблицы users необходимо извлечь пользователей, 
--- родившихся в августе и мае. Месяцы заданы в виде списка английских 
--- названий ('may', 'august')
+-- TASK 4
+-- (ПО ЖЕЛАНИЮ) ИЗ ТАБЛИЦЫ USERS НЕОБХОДИМО ИЗВЛЕЧЬ ПОЛЬЗОВАТЕЛЕЙ, 
+-- РОДИВШИХСЯ В АВГУСТЕ И МАЕ. МЕСЯЦЫ ЗАДАНЫ В ВИДЕ СПИСКА АНГЛИЙСКИХ 
+-- НАЗВАНИЙ ('MAY', 'AUGUST')
 
--- В таблице др задан датой, поэтому добавим столбец и заполним 
--- данными о месяце рождения
-ALTER TABLE users  
-ADD birthday VARCHAR(15);
+-- В ТАБЛИЦЕ ДР ЗАДАН ДАТОЙ, ПОЭТОМУ ДОБАВИМ СТОЛБЕЦ И ЗАПОЛНИМ 
+-- ДАННЫМИ О МЕСЯЦЕ РОЖДЕНИЯ
+ALTER TABLE USERS  
+ADD BIRTHDAY VARCHAR(15);
 
-UPDATE users SET birthday = monthname(users.birthday_at);
+UPDATE USERS SET BIRTHDAY = MONTHNAME(USERS.BIRTHDAY_AT);
 
--- Извлекаем пользователей, родившизся в августе и мае
-select * from users
-where birthday in ('may', 'august');
+-- ИЗВЛЕКАЕМ ПОЛЬЗОВАТЕЛЕЙ, РОДИВШИЗСЯ В АВГУСТЕ И МАЕ
+SELECT * FROM  USERS
+WHERE BIRTHDAY IN ('MAY', 'AUGUST');
 
--- Task 5
--- (по желанию) Из таблицы catalogs извлекаются записи 
--- при помощи запроса. SELECT * FROM catalogs WHERE id IN (5, 1, 2); 
--- Отсортируйте записи в порядке, заданном в списке IN.
-SELECT * FROM catalogs WHERE id IN (5, 1, 2)
-order by field(id, 5, 1, 2) 
+-- TASK 5
+-- (ПО ЖЕЛАНИЮ) ИЗ ТАБЛИЦЫ CATALOGS ИЗВЛЕКАЮТСЯ ЗАПИСИ 
+-- ПРИ ПОМОЩИ ЗАПРОСА. SELECT * FROM CATALOGS WHERE ID IN (5, 1, 2); 
+-- ОТСОРТИРУЙТЕ ЗАПИСИ В ПОРЯДКЕ, ЗАДАННОМ В СПИСКЕ IN.
+SELECT * FROM CATALOGS WHERE ID IN (5, 1, 2)
+ORDER BY FIELD(ID, 5, 1, 2) 
 
 -- PART 2
--- Task 1
--- Подсчитайте средний возраст пользователей в таблице users
+-- TASK 1
+-- ПОДСЧИТАЙТЕ СРЕДНИЙ ВОЗРАСТ ПОЛЬЗОВАТЕЛЕЙ В ТАБЛИЦЕ USERS
  
-SELECT avg(TIMESTAMPDIFF(YEAR, users.birthday_at , CURDATE())) from users
+SELECT AVG(TIMESTAMPDIFF(YEAR, USERS.BIRTHDAY_AT , CURDATE())) FROM USERS
 
--- Task 2
--- Подсчитайте количество дней рождения, 
--- которые приходятся на каждый из дней недели. 
--- Следует учесть, что необходимы дни недели текущего года, 
--- а не года рождения.
+-- TASK 2
+-- ПОДСЧИТАЙТЕ КОЛИЧЕСТВО ДНЕЙ РОЖДЕНИЯ, 
+-- КОТОРЫЕ ПРИХОДЯТСЯ НА КАЖДЫЙ ИЗ ДНЕЙ НЕДЕЛИ. 
+-- СЛЕДУЕТ УЧЕСТЬ, ЧТО НЕОБХОДИМЫ ДНИ НЕДЕЛИ ТЕКУЩЕГО ГОДА, 
+-- А НЕ ГОДА РОЖДЕНИЯ.
 
--- SELECT TIMESTAMP((DAY, MONTH), birthday_at) FROM users
+-- SELECT TIMESTAMP((DAY, MONTH), BIRTHDAY_AT) FROM USERS
 -- 
--- SELECT   count(birthday_at), dayname(birthday_at) AS day
--- FROM     users
--- GROUP BY day
+-- SELECT   COUNT(BIRTHDAY_AT), DAYNAME(BIRTHDAY_AT) AS DAY
+-- FROM     USERS
+-- GROUP BY DAY
 -- 
--- SELECT YEAR(curdate())
+-- SELECT YEAR(CURDATE())
 -- 
--- SELECT DATE(CONCAT_WS('-', YEAR(curdate()) , MONTH(birthday_at), DAY(birthday_at))) FROM users AS new_dates;
+-- SELECT DATE(CONCAT_WS('-', YEAR(CURDATE()) , MONTH(BIRTHDAY_AT), DAY(BIRTHDAY_AT))) FROM USERS AS NEW_DATES;
 
 
-SELECT count(*), 
-	   dayname(DATE(CONCAT_WS('-', YEAR(curdate()) , MONTH(birthday_at), DAY(birthday_at)))) 
-AS my_day
-FROM users 
-GROUP BY my_day
-ORDER BY my_day
+SELECT COUNT(*), 
+	   DAYNAME(DATE(CONCAT_WS('-', YEAR(CURDATE()) , MONTH(BIRTHDAY_AT), DAY(BIRTHDAY_AT)))) 
+AS MY_DAY
+FROM USERS 
+GROUP BY MY_DAY
+ORDER BY MY_DAY
 
 
--- Task 3
--- (по желанию) Подсчитайте произведение чисел в столбце таблицы
+-- TASK 3
+-- (ПО ЖЕЛАНИЮ) ПОДСЧИТАЙТЕ ПРОИЗВЕДЕНИЕ ЧИСЕЛ В СТОЛБЦЕ ТАБЛИЦЫ
 
-select exp(SUM(log(price))) from products
+SELECT EXP(SUM(LOG(PRICE))) FROM PRODUCTS
