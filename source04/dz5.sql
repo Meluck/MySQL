@@ -83,11 +83,12 @@ SELECT avg(TIMESTAMPDIFF(YEAR, users.birthday_at , CURDATE())) from users
 -- SELECT DATE(CONCAT_WS('-', YEAR(curdate()) , MONTH(birthday_at), DAY(birthday_at))) FROM users AS new_dates;
 
 
-SELECT count(DATE(CONCAT_WS('-', YEAR(curdate()) , MONTH(birthday_at), DAY(birthday_at)))), 
+SELECT count(*), 
 	   dayname(DATE(CONCAT_WS('-', YEAR(curdate()) , MONTH(birthday_at), DAY(birthday_at)))) 
 AS my_day
 FROM users 
 GROUP BY my_day
+ORDER BY my_day
 
 
 -- Task 3
